@@ -18,9 +18,6 @@ RUN apt-get update && apt-get install -y \
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg
 RUN docker-php-ext-install gd pdo pdo_mysql
 
-# setup .env
-RUN --mount=type=secret,id=_env,dst=/etc/secrets/.env cat /etc/secrets/.env
-
 # Enable Apache mod_rewrite
 RUN a2enmod rewrite
 
