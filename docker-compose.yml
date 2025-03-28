@@ -1,0 +1,47 @@
+version: '3.8'
+
+networks:
+  blog-app:
+    driver: bridge
+services:
+  app:
+    build: .
+    ports:
+      - "8000:80"
+    volumes:
+      - .:/var/www/html
+      - /var/www/html/vendor
+    
+    depends_on: 
+      - mysql
+    environment:
+      APP_NAME: Laravel
+      APP_ENV: local
+
+      DB_CONNECTION: mysql
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_DATABASE: laravel_blog
+      DB_USERNAME: root
+      DB_PASSWORD: db_password
+    
+    networks:
+      - blog-app
+
+  mysql:
+    image: mysql:5.7
+    container_name: mysql
+    platform: linux/amd64
+    environment:
+      MYSQL_DATABASE: laravel_blog
+      MYSQL_ROOT_PASSWORD: db_password
+      MYSQL_PASSWORD: db_password
+    ports:
+      - "3306:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+    
+    networks:
+      - blog-app
+volumes:
+  db_data:
