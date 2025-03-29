@@ -1,8 +1,5 @@
 #!/bin/bash
 
-# Wait for mysql to be ready
-sleep 10
-
 # Run migrations
 echo "Running migrations..."
 php artisan migrate
