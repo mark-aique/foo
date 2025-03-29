@@ -24,6 +24,8 @@ services:
       DB_DATABASE: laravel_blog
       DB_USERNAME: root
       DB_PASSWORD: db_password
+
+    entrypoint: /bin/bash /var/www/html/entrypoint.sh  
     
     networks:
       - blog-app
@@ -34,8 +36,9 @@ services:
     platform: linux/amd64
     environment:
       MYSQL_DATABASE: laravel_blog
-      MYSQL_ROOT_PASSWORD: db_password
+      MYSQL_USER: pickify_user
       MYSQL_PASSWORD: db_password
+      MYSQL_ROOT_PASSWORD: db_password
     ports:
       - "3306:3306"
     volumes:
