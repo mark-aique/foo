@@ -25,7 +25,7 @@ services:
       DB_USERNAME: root
       DB_PASSWORD: db_password
 
-    entrypoint: /bin/bash /var/www/html/entrypoint.sh  
+    entrypoint: /bin/bash /var/www/html/entrypoint.sh
     
     networks:
       - blog-app
