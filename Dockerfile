@@ -13,10 +13,12 @@ RUN apt-get update && apt-get install -y \
     zip \
     unzip \
     git \
-    curl
+    curl \
+    libpq-dev  # Install PostgreSQL client libraries
+
 # Install PHP extensions
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg
-RUN docker-php-ext-install gd pdo pdo_mysql
+RUN docker-php-ext-install gd pdo pdo_pgsql  # Use pdo_pgsql instead of pdo_mysql for PostgreSQL
 
 # Enable Apache mod_rewrite
 RUN a2enmod rewrite

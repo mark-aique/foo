@@ -3,6 +3,7 @@ version: '3.8'
 networks:
   blog-app:
     driver: bridge
+
 services:
   app:
     build: .
@@ -13,45 +14,44 @@ services:
       - /var/www/html/vendor
     
     depends_on: 
-      mysql:
+      postgres:
         condition: service_healthy
     environment:
       APP_NAME: Laravel
       APP_ENV: local
 
-      DB_CONNECTION: mysql
-      DB_HOST: mysql
-      DB_PORT: 3306
+      DB_CONNECTION: pgsql  # Change to PostgreSQL
+      DB_HOST: postgres     # Service name of the PostgreSQL container
+      DB_PORT: 5432         # Default PostgreSQL port
       DB_DATABASE: laravel_blog
-      DB_USERNAME: root
-      DB_PASSWORD: db_password
+      DB_USERNAME: postgres_user  # Your PostgreSQL username
+      DB_PASSWORD: db_password   # Your PostgreSQL password
 
     entrypoint: /bin/bash /var/www/html/entrypoint.sh
     
     networks:
       - blog-app
 
-  mysql:
-    image: mysql:5.7
-    container_name: mysql
+  postgres:
+    image: postgres:13
+    container_name: postgres
     platform: linux/amd64
     environment:
-      MYSQL_DATABASE: laravel_blog
-      MYSQL_USER: pickify_user
-      MYSQL_PASSWORD: db_password
-      MYSQL_ROOT_PASSWORD: db_password
+      POSTGRES_DB: laravel_blog
+      POSTGRES_USER: postgres_user
+      POSTGRES_PASSWORD: db_password
     ports:
-      - "3306:3306"
+      - "5432:5432"
     volumes:
-      - db_data:/var/lib/mysql
+      - db_data:/var/lib/postgresql/data
 
     healthcheck:
-      test: mysqladmin ping -h 127.0.0.1 -u $$MYSQL_USER --password=$$MYSQL_PASSWORD
-      timeout: 20s
-      retries: 10
+      test: ["CMD", "pg_isready", "-U", "postgres_user", "-d", "laravel_blog", "-h", "localhost"]
+      interval: 10s
+      retries: 5
 
-    
     networks:
       - blog-app
+
 volumes:
   db_data:
